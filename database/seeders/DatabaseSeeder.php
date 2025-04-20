@@ -13,7 +13,14 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // ========== ADMIN ==========
+        $this->createAdministrativeUsers();
+        $this->createAllCondominiumCombinations();
+        $this->createSpecialCases();
+    }
+
+    private function createAdministrativeUsers(): void
+    {
+        
         User::create([
             'name' => 'Admin Master',
             'email' => 'admin@condominios.com',
@@ -21,90 +28,151 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin'
         ]);
 
-        // ========== SÍNDICOS ==========
-        $sindico1 = User::create([
-            'name' => 'Síndico João',
-            'email' => 'sindico1@condominios.com',
-            'password' => Hash::make('12345678'),
-            'role' => 'sindico'
-        ]);
-
-        $sindico2 = User::create([
-            'name' => 'Síndica Maria',
-            'email' => 'sindico2@condominios.com',
-            'password' => Hash::make('12345678'),
-            'role' => 'sindico'
-        ]);
-
-        // ========== CONDOMÍNIOS ==========
-        $cond1 = Condominio::create([
-            'nome' => 'Residencial Sol Nascente',
-            'endereco' => 'Rua das Flores, 100'
-        ]);
-
-        $cond2 = Condominio::create([
-            'nome' => 'Edifício Mar Atlântico',
-            'endereco' => 'Avenida Beira Mar, 200'
-        ]);
-
-        // ========== VINCULAR SÍNDICOS AOS CONDOMÍNIOS ==========
-        // Cond1: Síndico1 ativo, Síndico2 inativo
-        $cond1->sindicos()->attach($sindico1, ['ativo' => true]);
-        $cond1->sindicos()->attach($sindico2, ['ativo' => false]);
-
-        // Cond2: Síndico2 ativo
-        $cond2->sindicos()->attach($sindico2, ['ativo' => true]);
-
-        // ========== MORADORES ==========
-        $morador1 = Morador::create([
-            'nome' => 'Carlos Silva',
-            'condominio_id' => $cond1->id
-        ]);
         
-        // Adicione esta linha:
-        $morador2 = Morador::create([
-            'nome' => 'Ana Souza',
-            'condominio_id' => $cond1->id
-        ]);
+        $sindicos = [
+            ['name' => 'Síndico João', 'email' => 'sindico1@condominios.com'],
+            ['name' => 'Síndica Maria', 'email' => 'sindico2@condominios.com'],
+            ['name' => 'Síndico Carlos', 'email' => 'sindico3@condominios.com']
+        ];
+
+        foreach ($sindicos as $sindico) {
+            User::create([
+                'name' => $sindico['name'],
+                'email' => $sindico['email'],
+                'password' => Hash::make('12345678'),
+                'role' => 'sindico'
+            ]);
+        }
+    }
+
+    private function createAllCondominiumCombinations(): void
+    {
         
-        $moradorExpulso = Morador::create([
-            'nome' => 'Morador Expulso',
-            'condominio_id' => null
-        ]);
+        $sindicos = User::where('role', 'sindico')->get();
+        $sindicoIndex = 0;
+
         
-        // Vincular apartamentos aos moradores:
-        Apartamento::create([
-            'numero' => '101',
-            'condominio_id' => $cond1->id,
-            'morador_id' => $morador1->id
-        ]);
+        $condominiosComSindico = [
+            [
+                'nome' => 'Residencial Sol Nascente',
+                'endereco' => 'Rua das Flores, 100',
+                'com_apartamentos' => true,
+                'com_moradores' => true
+            ],
+            [
+                'nome' => 'Edifício Sem Apartamentos',
+                'endereco' => 'Avenida Principal, 200',
+                'com_apartamentos' => false,
+                'com_moradores' => true
+            ],
+            [
+                'nome' => 'Residencial Sem Moradores',
+                'endereco' => 'Rua Secundária, 300',
+                'com_apartamentos' => true,
+                'com_moradores' => false
+            ]
+        ];
 
-        // ========== APARTAMENTOS ==========
-        // Apartamentos no cond1
-        $apt1 = Apartamento::create([
-            'numero' => '101',
-            'condominio_id' => $cond1->id,
-            'morador_id' => $morador1->id
-        ]);
+        foreach ($condominiosComSindico as $condominioData) {
+            
+            $cond = Condominio::create([
+                'nome' => $condominioData['nome'],
+                'endereco' => $condominioData['endereco']
+            ]);
 
-        $apt2 = Apartamento::create([
-            'numero' => '102',
-            'condominio_id' => $cond1->id,
-            'morador_id' => $morador2->id
-        ]);
+            
+            if ($sindicoIndex < count($sindicos)) {
+                $cond->sindicos()->attach($sindicos[$sindicoIndex], ['ativo' => true]);
+                $sindicoIndex++;
+            }
 
-        // Apartamento vago no cond1
-        $apt3 = Apartamento::create([
-            'numero' => '103',
-            'condominio_id' => $cond1->id,
-            'morador_id' => null
-        ]);
+            
+            if ($condominioData['com_moradores']) {
+                $morador = Morador::create(['nome' => 'Morador do ' . $condominioData['nome'], 'condominio_id' => $cond->id]);
+                
+                
+                if ($condominioData['com_apartamentos']) {
+                    Apartamento::create([
+                        'numero' => '101',
+                        'condominio_id' => $cond->id,
+                        'morador_id' => $morador->id
+                    ]);
+                    Apartamento::create([
+                        'numero' => '102',
+                        'condominio_id' => $cond->id
+                    ]);
+                }
+            } elseif ($condominioData['com_apartamentos']) {
+                Apartamento::create(['numero' => '201', 'condominio_id' => $cond->id]);
+                Apartamento::create(['numero' => '202', 'condominio_id' => $cond->id]);
+            }
+        }
 
-        // Apartamento do morador expulso (deve estar vago)
-        $aptExpulso = Apartamento::create([
-            'numero' => '201',
-            'condominio_id' => $cond2->id,
-            'morador_id' => null
-        ]);
+        
+        $condominiosSemSindico = [
+            [
+                'nome' => 'Condomínio Sem Síndico',
+                'endereco' => 'Travessa da Paz, 400',
+                'com_apartamentos' => true,
+                'com_moradores' => true
+            ],
+            [
+                'nome' => 'Condomínio Vazio',
+                'endereco' => 'Alameda dos Sonhos, 500',
+                'com_apartamentos' => false,
+                'com_moradores' => false
+            ],
+            [
+                'nome' => 'Edifício Sem Síndico e Moradores',
+                'endereco' => 'Avenida Central, 600',
+                'com_apartamentos' => true,
+                'com_moradores' => false
+            ],
+            [
+                'nome' => 'Residencial Sem Síndico e Apartamentos',
+                'endereco' => 'Rua das Árvores, 700',
+                'com_apartamentos' => false,
+                'com_moradores' => true
+            ],
+            [
+                'nome' => 'Condomínio Sem Moradores e Apartamentos',
+                'endereco' => 'Avenida das Flores, 800',
+                'com_apartamentos' => false,
+                'com_moradores' => false
+            ]
+        ];
+
+        foreach ($condominiosSemSindico as $condominioData) {
+            $cond = Condominio::create([
+                'nome' => $condominioData['nome'],
+                'endereco' => $condominioData['endereco']
+            ]);
+
+           
+            if ($condominioData['com_moradores']) {
+                $morador = Morador::create(['nome' => 'Morador do ' . $condominioData['nome'], 'condominio_id' => $cond->id]);
+                
+                
+                if ($condominioData['com_apartamentos']) {
+                    Apartamento::create([
+                        'numero' => '101',
+                        'condominio_id' => $cond->id,
+                        'morador_id' => $morador->id
+                    ]);
+                }
+            } elseif ($condominioData['com_apartamentos']) {
+                Apartamento::create(['numero' => '201', 'condominio_id' => $cond->id]);
+                Apartamento::create(['numero' => '202', 'condominio_id' => $cond->id]);
+            }
+        }
+    }
+
+    private function createSpecialCases(): void
+    {
+        
+        Morador::create(['nome' => 'Morador Expulso']);
+        
+        
+        Morador::create(['nome' => 'Morador Sem Condomínio']);
     }
 }
