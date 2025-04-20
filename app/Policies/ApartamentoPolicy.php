@@ -55,16 +55,5 @@ class ApartamentoPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Apartamento $apartamento): bool
-    {
-        //
-    }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Apartamento $apartamento): bool
-    {
-        //
-    }
 }

@@ -27,8 +27,8 @@ class CondominioController extends Controller
             ->with([
                 'apartamentos.morador',
                 'sindicos',
-                'moradores', // Carrega moradores através de apartamentos
-                'moradoresDiretos' // Carrega moradores diretos
+                'moradores', 
+                'moradoresDiretos' 
             ])
             ->get();
     
@@ -96,19 +96,19 @@ class CondominioController extends Controller
         $this->authorize('delete', $condominio);
         
         DB::transaction(function () use ($condominio) {
-            // 1. Remove o vínculo dos moradores com os apartamentos
+            
             $condominio->apartamentos()->each(function($apartamento) {
-                $apartamento->morador_id = null; // Define morador_id como null (devido ao onDelete('set null'))
+                $apartamento->morador_id = null;
                 $apartamento->save();
             });
             
-            // 2. Deleta todos os apartamentos do condomínio
+            
             $condominio->apartamentos()->delete();
             
-            // 3. Remove os vínculos com síndicos
+            
             $condominio->sindicos()->detach();
             
-            // 4. Finalmente deleta o condomínio
+            
             $condominio->delete();
         });
         

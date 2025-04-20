@@ -35,6 +35,7 @@ class MoradorPolicy
 
     public function delete(User $user, Morador $morador)
     {
+        
         return $this->update($user, $morador);
     }
 }

@@ -21,7 +21,7 @@ class Condominio extends Model
         return $this->hasMany(Apartamento::class);
     }
 
-    // Relação com síndicos (usuários)
+   
     public function sindicos(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'sindico_condominio')
@@ -29,36 +29,34 @@ class Condominio extends Model
             ->withTimestamps();
     }
 
-    // Síndico ativo
+  
     public function sindicoAtivo()
     {
         return $this->sindicos()->wherePivot('ativo', true)->first();
     }
 
-    // Moradores através dos apartamentos
     public function moradores(): HasManyThrough
     {
         return $this->hasManyThrough(
             Morador::class,
             Apartamento::class,
-            'condominio_id',    // FK na tabela apartamentos
-            'id',               // FK na tabela moradores (morador_id)
-            'id',               // PK na tabela condominios
-            'morador_id'        // FK na tabela apartamentos
+            'condominio_id',    
+            'id',              
+            'id',               
+            'morador_id'        
         )->distinct();
     }
 
-    // Moradores sem apartamento (se existir relação direta)
     public function moradoresDiretos()
     {
         // Relação direta com moradores (se existir condominio_id na tabela moradores)
         return $this->hasMany(Morador::class, 'condominio_id');
     }
     
-    // Método para obter todos os moradores (com ou sem apartamento)
+
     public function getTodosMoradoresAttribute()
     {
-        // Moradores com apartamento (através da relação hasManyThrough)
+        
         $moradoresComApto = $this->moradores;
         
         // Moradores sem apartamento (relação direta)

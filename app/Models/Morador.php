@@ -29,13 +29,5 @@ class Morador extends Model
     {
         return $this->hasMany(Apartamento::class, 'morador_id');
     }
-    protected static function booted()
-    {
-        //static::deleting(function ($morador) {
-            // Impede exclusão se houver apartamentos vinculados
-        //    if ($morador->apartamentos()->exists()) {
-        //        throw new \Exception("Exclua os apartamentos primeiro");
-        //    }
-        //});
-    }
+
 }

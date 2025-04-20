@@ -60,7 +60,7 @@ class MoradorController extends Controller
     
         $morador = Morador::create($validated);
     
-        // Vincula o apartamento se foi selecionado
+        
         if ($request->apartamento_id) {
             $apartamento = Apartamento::find($request->apartamento_id);
             $apartamento->update(['morador_id' => $morador->id]);
@@ -108,7 +108,7 @@ class MoradorController extends Controller
         DB::transaction(function () use ($morador, $validated) {
             $condominioOriginal = $morador->condominio_id;
             
-            // Atualiza dados básicos
+           
             $morador->update([
                 'nome' => $validated['nome'],
                 'email' => $validated['email'],
@@ -118,15 +118,15 @@ class MoradorController extends Controller
                 'expulso' => false
             ]);
     
-            // Se o condomínio foi alterado
+            
             if ($condominioOriginal != $morador->condominio_id) {
-                // Desvincula de todos os apartamentos do condomínio antigo
+                
                 $morador->apartamentos()
                         ->where('condominio_id', $condominioOriginal)
                         ->update(['morador_id' => null]);
             }
     
-            // Vincula novo apartamento se foi selecionado
+           
             if ($validated['apartamento_id'] ?? false) {
                 $apartamento = Apartamento::find($validated['apartamento_id']);
                 $apartamento->update(['morador_id' => $morador->id]);
@@ -138,24 +138,24 @@ class MoradorController extends Controller
     public function destroy(Morador $morador)
     {
         $this->authorize('delete', $morador);
-        // Exclui o morador (ação independente)
+        
         $morador->delete();
         
         return redirect()->route('moradores.index')->with('success', 'Morador excluído!');
     }
     public function expulsar(Morador $morador)
-{
-    $this->authorize('update', $morador);
-    
-    DB::transaction(function () use ($morador) {
-        $morador->update([
-            'condominio_id' => null,
-            'expulso' => true
-        ]);
-        
-        $morador->apartamentos()->update(['morador_id' => null]);
-    });
+    {
+        $this->authorize('update', $morador);
 
-    return redirect()->route('moradores.index')->with('success', 'Morador expulso com sucesso!');
-}
+        DB::transaction(function () use ($morador) {
+            $morador->update([
+                'condominio_id' => null,
+                'expulso' => true
+            ]);
+
+            $morador->apartamentos()->update(['morador_id' => null]);
+        });
+
+        return redirect()->route('moradores.index')->with('success', 'Morador expulso com sucesso!');
+    }
 }

@@ -13,7 +13,7 @@ class CondominioPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->role === 'admin'; // Apenas admin pode listar todos condomínios
+        return $user->role === 'admin'; 
     }
 
     /**
@@ -48,16 +48,5 @@ class CondominioPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Condominio $condominio): bool
-    {
-        //
-    }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Condominio $condominio): bool
-    {
-        //
-    }
 }

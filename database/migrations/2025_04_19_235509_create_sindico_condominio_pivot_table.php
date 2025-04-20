@@ -19,7 +19,7 @@ return new class extends Migration
                 $table->unique(['user_id', 'condominio_id']);
             });
         } else {
-            // Se a tabela já existe, apenas adiciona colunas faltantes
+            
             Schema::table('sindico_condominio', function (Blueprint $table) {
                 if (!Schema::hasColumn('sindico_condominio', 'ativo')) {
                     $table->boolean('ativo')->default(false)->after('condominio_id');
@@ -30,7 +30,7 @@ return new class extends Migration
     
     public function down()
     {
-        // Não removemos a tabela aqui para evitar problemas
+        
         Schema::table('sindico_condominio', function (Blueprint $table) {
             $table->dropColumn('ativo');
         });

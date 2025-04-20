@@ -20,7 +20,7 @@ class UserObserver
 // UserObserver.php
     public function updated(User $user)
     {
-        // Se o morador foi desvinculado de um condomínio
+        
         if ($user->isDirty('condominio_id') && $user->condominio_id === null) {
             $user->apartamentos()->update(['morador_id' => null]);
         }
