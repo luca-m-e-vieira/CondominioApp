@@ -10,10 +10,18 @@ Sistema para gestão de condomínios com controle de moradores, apartamentos e s
 
 ## ⚙️ Instalação
 ```bash
-git clone [URL_DO_REPO]
-cd nome-do-repo
+git clone https://github.com/luca-m-e-vieira/CondominioApp.git
+```
+```bash
+cd CondominioApp
+```
+```bash
 composer install
+```
+```bash
 cp .env.example .env
+```
+```bash
 php artisan key:generate
 ```
 
@@ -22,9 +30,26 @@ php artisan key:generate
 2. Execute:
 ```bash
 php artisan migrate --seed
+```
+```bash
 php artisan serve
 ```
 
 ## 🧪 Contas para Teste
-- **Admin**: `admin@example.com` / `password`
-- **Síndico**: `sindico@example.com` / `password`
+- **Admin**:
+ ```bash
+ admin@condominios.com
+```
+senha:
+```bash
+12345678
+```
+- **Síndico**:
+```bash
+sindico1@condominios.com
+```
+senha:
+```bash
+12345678
+```
+
