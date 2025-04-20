@@ -45,8 +45,18 @@ senha:
 12345678
 ```
 - **Síndico**:
+escolha um sindico
 ```bash
 sindico1@condominios.com
+```
+```bash
+sindico2@condominios.com
+```
+```bash
+sindico3@condominios.com
+```
+```bash
+sindico4@condominios.com
 ```
 senha:
 ```bash
