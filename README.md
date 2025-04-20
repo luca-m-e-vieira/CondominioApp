@@ -9,6 +9,10 @@ Sistema para gestão de condomínios com controle de moradores, apartamentos e s
 - **Vínculo automático entre entidades**
 
 ## ⚙️ Instalação
+
+⚠️ **Atenção**: Este projeto utiliza PostgreSQL como banco de dados padrão.
+
+### Opção 1: Usando PHP Artisan Serve (Local)
 ```bash
 git clone https://github.com/luca-m-e-vieira/CondominioApp.git
 ```
@@ -25,14 +29,56 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-## 📋 Configuração
-1. Configure o `.env` com suas credenciais do banco de dados
-2. Execute:
+Configurar o `.env` com suas credenciais do PostgreSQL:
+```bash
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=seu_banco
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+```
+
+Executar as migrações:
 ```bash
 php artisan migrate --seed
 ```
 ```bash
 php artisan serve
+```
+### Opção 2: Usando Laravel Sail (Docker)
+```bash
+git clone https://github.com/luca-m-e-vieira/CondominioApp.git
+```
+```bash
+cd CondominioApp
+```
+```bash
+composer install
+```
+```bash
+cp .env.example .env
+```
+```bash
+php artisan key:generate
+```
+
+Configurar o `.env` para usar o Sail:
+```bash
+DB_CONNECTION=pgsql
+DB_HOST=postgres
+DB_PORT=5432
+DB_DATABASE=laravel
+DB_USERNAME=sail
+DB_PASSWORD=password
+```
+
+Iniciar o ambiente com Sail:
+```bash
+./vendor/bin/sail up -d
+```
+```bash
+./vendor/bin/sail artisan migrate --seed
 ```
 
 ## 🧪 Contas para Teste
@@ -62,4 +108,3 @@ senha:
 ```bash
 12345678
 ```
-
