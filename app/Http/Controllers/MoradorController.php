@@ -23,7 +23,7 @@ class MoradorController extends Controller
                 ? Morador::where('condominio_id', $condominioAtivo->id)
                           ->where('expulso', false)
                           ->with(['condominio', 'apartamentos'])
-                          ->paginate(10)
+                          ->paginate(30)
                 : collect();
         } else {
             $moradores = Morador::with(['condominio', 'apartamentos'])->paginate(10);

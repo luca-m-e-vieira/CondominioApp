@@ -18,10 +18,10 @@ class ApartamentoController extends Controller
         $this->authorize('viewAny', Apartamento::class);
     
         if (auth()->user()->role === 'admin') {
-            $apartamentos = Apartamento::paginate(10);
+            $apartamentos = Apartamento::paginate(30);
         } else {
             $condominioAtivo = auth()->user()->condominios()->wherePivot('ativo', true)->first();
-            $apartamentos = $condominioAtivo->apartamentos()->paginate(10) ?? collect();
+            $apartamentos = $condominioAtivo->apartamentos()->paginate(30) ?? collect();
         }
     
         return view('apartamentos.index', compact('apartamentos'));
@@ -93,7 +93,7 @@ class ApartamentoController extends Controller
             'morador_id' => 'nullable|exists:moradores,id'
         ]);
     
-        // Verifica se o morador selecionado pertence ao novo condomínio
+        
         if ($request->morador_id) {
             $morador = Morador::find($request->morador_id);
             if ($morador->condominio_id != $request->condominio_id) {
@@ -113,12 +113,11 @@ class ApartamentoController extends Controller
     public function destroy(Apartamento $apartamento)
     {
         try {
-            // Remove o vínculo com morador primeiro (se existir)
+            
             if ($apartamento->morador_id) {
                 $apartamento->update(['morador_id' => null]);
             }
-            
-            // Exclui o apartamento
+           
             $apartamento->delete();
             
             return redirect()->route('apartamentos.index')
@@ -131,7 +130,7 @@ class ApartamentoController extends Controller
 
     public function desvincularMorador(Apartamento $apartamento)
     {
-        // Remove apenas o vínculo com o morador
+        
         $apartamento->update(['morador_id' => null]);
         
         return back()->with('success', 'Apartamento desvinculado!');
