@@ -21,7 +21,7 @@ class ApartamentoPolicy
      */
     public function view(User $user, Apartamento $apartamento): bool
     {
-        //
+        return $user->role === 'admin' || $user->role === 'sindico';
     }
 
     /**
