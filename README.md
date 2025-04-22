@@ -32,11 +32,11 @@ php artisan key:generate
 Configurar o `.env` com suas credenciais do PostgreSQL:
 ```bash
 DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_DATABASE=seu_banco
-DB_USERNAME=seu_usuario
-DB_PASSWORD=sua_senha
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=sail
+DB_PASSWORD=root
 ```
 
 Executar as migrações:
@@ -66,11 +66,11 @@ php artisan key:generate
 Configurar o `.env` para usar o Sail:
 ```bash
 DB_CONNECTION=mysql
-DB_HOST=postgres
-DB_PORT=5432
+DB_HOST=mysql
+DB_PORT=3306
 DB_DATABASE=laravel
 DB_USERNAME=sail
-DB_PASSWORD=password
+DB_PASSWORD=root
 ```
 
 Iniciar o ambiente com Sail:
