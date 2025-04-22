@@ -18,10 +18,14 @@
                     <input type="text" class="form-control" id="numero" name="numero" 
                            value="{{ old('numero', $apartamento->numero) }}" required>
                 </div>
-
+                @if(auth()->user()->role === 'admin')
+                            
                 <div class="mb-3">
                     <label for="condominio_id" class="form-label">Condomínio*</label>
                     <select class="form-select" id="condominio_id" name="condominio_id" required>
+                   
+                            
+                        
                         <option value="">Selecione um condomínio</option>
                         @foreach($condominios as $condominio)
                             <option value="{{ $condominio->id }}" 
@@ -30,8 +34,9 @@
                             </option>
                         @endforeach
                     </select>
+                    
                 </div>
-
+                @endif
                 <div class="mb-3">
                     <label for="morador_id" class="form-label">Morador</label>
                     <select class="form-select" id="morador_id" name="morador_id">
