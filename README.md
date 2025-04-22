@@ -10,7 +10,7 @@ Sistema para gestão de condomínios com controle de moradores, apartamentos e s
 
 ## ⚙️ Instalação
 
-⚠️ **Atenção**: Este projeto utiliza PostgreSQL como banco de dados padrão.
+⚠️ **Atenção**: Este projeto utiliza MySQL como banco de dados padrão.
 
 ### Opção 1: Usando PHP Artisan Serve (Local)
 ```bash
@@ -31,7 +31,7 @@ php artisan key:generate
 
 Configurar o `.env` com suas credenciais do PostgreSQL:
 ```bash
-DB_CONNECTION=pgsql
+DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_DATABASE=seu_banco
@@ -65,7 +65,7 @@ php artisan key:generate
 
 Configurar o `.env` para usar o Sail:
 ```bash
-DB_CONNECTION=pgsql
+DB_CONNECTION=mysql
 DB_HOST=postgres
 DB_PORT=5432
 DB_DATABASE=laravel
