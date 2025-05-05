@@ -91,7 +91,7 @@ senha:
 12345678
 ```
 - **Síndico**:
-escolha um sindico
+escolha um sindic
 ```bash
 sindico1@condominios.com
 ```
